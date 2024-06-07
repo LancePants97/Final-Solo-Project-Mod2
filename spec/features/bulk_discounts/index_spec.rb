@@ -5,11 +5,11 @@ describe "bulk discounts index" do
     @merchant1 = Merchant.create!(name: "Hair Care")
     @merchant2 = Merchant.create!(name: "Jewelry")
 
-    @discount1 = @merchant.bulkdiscounts.create(percentage_discount: 25, quantity_threshold: 10)
-    @discount2 = @merchant.bulkdiscounts.create(percentage_discount: 50, quantity_threshold: 15)
+    @discount1 = BulkDiscount.create!(percentage_discount: 25, quantity_threshold: 10, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 15, merchant_id: @merchant1.id)
 
-    @discount3 = @merchant2.bulkdiscounts.create(percentage_discount: 10, quantity_threshold: 3)
-    @discount4 = @merchant2.bulkdiscounts.create(percentage_discount: 30, quantity_threshold: 5)
+    @discount3 = BulkDiscount.create!(percentage_discount: 10, quantity_threshold: 3, merchant_id: @merchant2.id)
+    @discount4 = BulkDiscount.create!(percentage_discount: 30, quantity_threshold: 5, merchant_id: @merchant2.id)
 
     @item_1 = Item.create!(name: "Shampoo", description: "This washes your hair", unit_price: 10, merchant_id: @merchant1.id, status: 1)
     @item_2 = Item.create!(name: "Conditioner", description: "This makes your hair shiny", unit_price: 8, merchant_id: @merchant1.id)
