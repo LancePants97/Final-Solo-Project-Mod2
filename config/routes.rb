@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root 'welcome#index'
   resources :merchants, only: [:show] do
     resources :dashboard, only: [:index]
     resources :items, except: [:destroy]
