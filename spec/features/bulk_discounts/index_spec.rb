@@ -5,11 +5,11 @@ describe "bulk discounts index" do
     @merchant1 = Merchant.create!(name: "Hair Care")
     @merchant2 = Merchant.create!(name: "Jewelry")
 
-    @discount1 = BulkDiscount.create!(percentage_discount: 25, quantity_threshold: 10, merchant_id: @merchant1.id)
-    @discount2 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 15, merchant_id: @merchant1.id)
+    @discount1 = BulkDiscount.create!(percentage_discount: 10, quantity_threshold: 5, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(percentage_discount: 15, quantity_threshold: 10, merchant_id: @merchant1.id)
 
-    @discount3 = BulkDiscount.create!(percentage_discount: 10, quantity_threshold: 3, merchant_id: @merchant2.id)
-    @discount4 = BulkDiscount.create!(percentage_discount: 30, quantity_threshold: 5, merchant_id: @merchant2.id)
+    @discount3 = BulkDiscount.create!(percentage_discount: 30, quantity_threshold: 20, merchant_id: @merchant2.id)
+    @discount4 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 35, merchant_id: @merchant2.id)
 
     @item_1 = Item.create!(name: "Shampoo", description: "This washes your hair", unit_price: 10, merchant_id: @merchant1.id, status: 1)
     @item_2 = Item.create!(name: "Conditioner", description: "This makes your hair shiny", unit_price: 8, merchant_id: @merchant1.id)
@@ -64,24 +64,27 @@ describe "bulk discounts index" do
 # And each bulk discount listed includes a link to its show page
   describe "Bulk Discounts Index" do
     it "can get from the merchant dashboard to the bulk discounts index page" do
-      visit "merchants/#{@merchant.id}"
-
+      visit "/merchants/#{@merchant1.id}/dashboard"
+      # save_and_open_page
       click_link "My Bulk Discounts"
-
-      expect(current_path).to eq("merchants/#{@merchant.id}/bulk_discounts")
+     
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts")
     end
 
     it "shows me all of my bulk discounts including their percentage discount and quality thresholds" do
-      visit "merchants/#{@merchant.id}/bulk_discounts"
+      visit "/merchants/#{@merchant1.id}/bulk_discounts"
+      # require 'pry'; binding.pry
+      # save_and_open_page
+      expect(page).to have_content("Bulk Discounts for #{@merchant1.name}")
 
       expect(page).to have_content(@discount1.percentage_discount)
       expect(page).to have_content(@discount1.quantity_threshold)
 
       expect(page).to_not have_content(@discount3.percentage_discount)
-      expect(page).to have_content(@discount3.quantity_threshold)
+      expect(page).to_not have_content(@discount3.quantity_threshold)
 
       expect(page).to_not have_content(@discount4.percentage_discount)
-      expect(page).to have_content(@discount4.quantity_threshold)
+      expect(page).to_not have_content(@discount4.quantity_threshold)
     end
 
     xit "shows me a link for each discount that links to the item's show page" do
