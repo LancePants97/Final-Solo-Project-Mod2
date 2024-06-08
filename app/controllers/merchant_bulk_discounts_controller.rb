@@ -25,4 +25,10 @@ class MerchantBulkDiscountsController < ApplicationController
     flash[:alert] = "Error"
     end
   end
+
+  def destroy
+    @merchant = Merchant.find(params[:merchant_id])
+    @merchant.bulk_discounts.find(params[:id]).destroy
+    redirect_to "/merchants/#{@merchant.id}/bulk_discounts"
+  end
 end
