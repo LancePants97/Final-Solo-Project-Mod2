@@ -6,7 +6,7 @@ describe "bulk discounts index" do
     @merchant2 = Merchant.create!(name: "Jewelry")
 
     @discount1 = BulkDiscount.create!(percentage_discount: 10, quantity_threshold: 5, merchant_id: @merchant1.id)
-    @discount2 = BulkDiscount.create!(percentage_discount: 15, quantity_threshold: 10, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(percentage_discount: 15, quantity_threshold: 12, merchant_id: @merchant1.id)
 
     @discount3 = BulkDiscount.create!(percentage_discount: 30, quantity_threshold: 20, merchant_id: @merchant2.id)
     @discount4 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 35, merchant_id: @merchant2.id)
@@ -70,6 +70,29 @@ describe "bulk discounts index" do
 
         expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts/#{@discount1.id}")
       end
+    end
+  end
+# User Story 3 - Merchant Bulk Discount Delete
+# As a merchant
+# When I visit my bulk discounts index
+# Then next to each bulk discount I see a button to delete it
+# When I click this button
+# Then I am redirected back to the bulk discounts index page
+# And I no longer see the discount listed
+  describe "Bulk Discounts Delete" do
+    it "has a functional button to delete a bulk discount" do
+      visit "/merchants/#{@merchant1.id}/bulk_discounts"
+      save_and_open_page
+      expect(page).to have_content(@discount2.percentage_discount)
+      expect(page).to have_content(@discount2.quantity_threshold)
+
+      within("#discount-#{@discount2.id}") do
+        click_button("Delete")
+
+        expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts")
+      end
+      expect(page).to_not have_content(@discount2.percentage_discount)
+      expect(page).to_not have_content(@discount2.quantity_threshold)
     end
   end
 end
