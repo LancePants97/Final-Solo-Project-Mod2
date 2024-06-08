@@ -36,11 +36,11 @@ describe "bulk discounts index" do
      
       click_link "My Bulk Discounts"
 
-      expect(current_path).to eq("/merchants/#{@merchant1.id}/merchant_bulk_discounts")
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts")
     end
 
     it "shows me all of my bulk discounts including their percentage discount and quality thresholds" do
-      visit "/merchants/#{@merchant1.id}/merchant_bulk_discounts"
+      visit "/merchants/#{@merchant1.id}/bulk_discounts"
       
       expect(page).to have_content("Bulk Discounts for #{@merchant1.name}")
 
@@ -60,7 +60,7 @@ describe "bulk discounts index" do
     end
 
     it "shows me a link for each discount that links to the item's show page" do
-      visit "/merchants/#{@merchant1.id}/merchant_bulk_discounts"
+      visit "/merchants/#{@merchant1.id}/bulk_discounts"
 
       within("#discount-#{@discount1.id}") do
         expect(page).to have_content(@discount1.percentage_discount)
@@ -68,7 +68,7 @@ describe "bulk discounts index" do
 
         click_link("Info")
 
-        expect(current_path).to eq("/merchants/#{@merchant1.id}/merchant_bulk_discounts/#{@discount1.id}")
+        expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts/#{@discount1.id}")
       end
     end
   end
