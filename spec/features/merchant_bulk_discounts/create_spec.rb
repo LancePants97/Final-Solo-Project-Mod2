@@ -33,7 +33,7 @@ describe "Bulk Discounts Create" do
 # And I see my new bulk discount listed
   it "can click a link on the bulk discounts index to create a new bulk discount" do
     visit "/merchants/#{@merchant1.id}/bulk_discounts"
-    # save_and_open_page
+
     click_link "New Bulk Discount"
 
     expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts/new")
@@ -48,13 +48,6 @@ describe "Bulk Discounts Create" do
     click_button("Save")
     expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts")
 
-    expect(page).to have_content(75)
-    expect(page).to have_content(100)
-  end
-
-  xit "takes me back to the bulk discounts index where I see my newly created discount" do
-    visit "/merchants/#{@merchant1.id}/bulk_discounts"
-    # save_and_open_page
     expect(page).to have_content(75)
     expect(page).to have_content(100)
   end
