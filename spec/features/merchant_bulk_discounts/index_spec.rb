@@ -82,7 +82,7 @@ describe "bulk discounts index" do
   describe "Bulk Discounts Delete" do
     it "has a functional button to delete a bulk discount" do
       visit "/merchants/#{@merchant1.id}/bulk_discounts"
-      save_and_open_page
+
       expect(page).to have_content(@discount2.percentage_discount)
       expect(page).to have_content(@discount2.quantity_threshold)
 
