@@ -5,6 +5,12 @@ RSpec.describe "invoices show" do
     @merchant1 = Merchant.create!(name: "Hair Care")
     @merchant2 = Merchant.create!(name: "Jewelry")
 
+    @discount1 = BulkDiscount.create!(percentage_discount: 10, quantity_threshold: 5, merchant_id: @merchant1.id)
+    @discount2 = BulkDiscount.create!(percentage_discount: 15, quantity_threshold: 12, merchant_id: @merchant1.id)
+
+    @discount3 = BulkDiscount.create!(percentage_discount: 30, quantity_threshold: 20, merchant_id: @merchant2.id)
+    @discount4 = BulkDiscount.create!(percentage_discount: 50, quantity_threshold: 35, merchant_id: @merchant2.id)
+
     @item_1 = Item.create!(name: "Shampoo", description: "This washes your hair", unit_price: 10, merchant_id: @merchant1.id, status: 1)
     @item_2 = Item.create!(name: "Conditioner", description: "This makes your hair shiny", unit_price: 8, merchant_id: @merchant1.id)
     @item_3 = Item.create!(name: "Brush", description: "This takes out tangles", unit_price: 5, merchant_id: @merchant1.id)
@@ -99,5 +105,22 @@ RSpec.describe "invoices show" do
       expect(page).to_not have_content("in progress")
     end
   end
+# User Story 6 - Merchant Invoice Show Page: Total Revenue and Discounted Revenue
+# As a merchant
+# When I visit my merchant invoice show page
+# Then I see the total revenue for my merchant from this invoice (not including discounts)
+# And I see the total discounted revenue for my merchant from this invoice which includes bulk discounts in the calculation
+  it "shows the total revenue for my merchant as well as discounted revenue that includes bulk discounts in the calculation" do
+    visit merchant_invoice_path(@merchant1, @invoice_1)
 
+    expect(page).to have_content("Total Revenue: ")
+    expect(page).to have_content(@invoice_1.total_revenue)
+
+    expect(page).to have_content("Revenue After Discount: ")
+    expect(page).to have_content(@invoice_1.discounted_revenue.round(2))
+
+    expect(page).to have_content("Total Discount Amount: ")
+    expect(page).to have_content(@invoice_1.discount_amount.round(2))
+    save_and_open_page
+  end
 end
