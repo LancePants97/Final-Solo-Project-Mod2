@@ -121,6 +121,5 @@ RSpec.describe "invoices show" do
 
     expect(page).to have_content("Total Discount Amount: ")
     expect(page).to have_content(@invoice_1.discount_amount.round(2))
-    save_and_open_page
   end
 end
