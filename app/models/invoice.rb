@@ -36,4 +36,16 @@ class Invoice < ApplicationRecord
   def discounted_revenue
     total_revenue - discount_amount
   end
+
+  def bulk_discount_for_item(item)
+    merchant = item.merchant
+    merchant.bulk_discounts
+            .where("quantity_threshold <= ?", item.invoice_items.find_by(invoice_id: id).quantity)
+            .order(quantity_threshold: :desc)
+            .first
+  end
+
+  def discount_applied?
+    total_revenue > discounted_revenue
+  end
 end

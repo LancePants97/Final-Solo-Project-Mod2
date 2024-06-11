@@ -19,6 +19,18 @@
     <%= @customer.first_name %> <%= @customer.last_name %><br>
   <br>
   <br>
+  <section id="discounts_per_item">
+  <h4>Bulk Discount Applied per Item: </h4>
+  <% @invoice.items.each do |item| %>
+    <section id="item-<%= item.id %>">
+    <%= "Item: #{item.name}" %>
+    <% if @invoice.discount_applied? == true %>
+      <%= link_to "View Bulk Discount", merchant_bulk_discount_path(item.merchant, @invoice.bulk_discount_for_item(item)) %>
+    <% end %>
+    </section>
+  <% end %>
+  </section>
+
   <h4>Items on this Invoice:</h4>
   <table class="table">
     <thead>

@@ -20,6 +20,5 @@ class Item < ApplicationRecord
     .order("total_rev desc, invoice_date desc")
     .limit(1)
     .first&.invoice_date&.to_date
-
   end
 end
