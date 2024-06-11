@@ -50,5 +50,14 @@ RSpec.describe Invoice, type: :model do
 
       expect(@invoice_1.discounted_revenue).to eq(discounted_rev) # total_revenue(155) - discount_amount(18.75)
     end
+
+    it "bulk_discount_for_item(item)" do
+      expect(@invoice_1.bulk_discount_for_item(@item_1)).to eq(@discount1)
+      expect(@invoice_1.bulk_discount_for_item(@item_8)).to eq(@discount2)
+    end
+
+    it "discount_applied?" do
+      expect(@invoice_1.discount_applied?).to be(true)
+    end
   end
 end
