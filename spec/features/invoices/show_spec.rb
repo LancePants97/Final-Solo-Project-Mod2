@@ -63,7 +63,7 @@ RSpec.describe "invoices show" do
 
   it "shows the invoice information" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
-
+    
     expect(page).to have_content(@invoice_1.id)
     expect(page).to have_content(@invoice_1.status)
     expect(page).to have_content(@invoice_1.created_at.strftime("%A, %B %-d, %Y"))
@@ -119,10 +119,10 @@ RSpec.describe "invoices show" do
     expect(page).to have_content(@invoice_1.total_revenue)
 
     expect(page).to have_content("Revenue After Discount: ")
-    expect(page).to have_content(@invoice_1.discounted_revenue.round(2))
+    expect(page).to have_content(@invoice_1.discounted_revenue(@merchant1).round(2))
 
     expect(page).to have_content("Total Discount Amount: ")
-    expect(page).to have_content(@invoice_1.discount_amount.round(2))
+    expect(page).to have_content(@invoice_1.discount_amount(@merchant1).round(2))
   end
 # 7 - Merchant Invoice Show Page: Link to applied discounts
 # As a merchant
@@ -149,3 +149,4 @@ RSpec.describe "invoices show" do
     end
   end
 end
+

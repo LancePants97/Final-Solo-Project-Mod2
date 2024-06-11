@@ -79,7 +79,7 @@ describe "Admin Invoices Index Page" do
 # And I see the total discounted revenue from this invoice which includes 
 # bulk discounts in the calculation
   it "shows the total revenue for my merchant as well as discounted revenue that includes bulk discounts in the calculation" do
-    save_and_open_page
+    # save_and_open_page
 
     expect(page).to have_content("Total Revenue: ")
     expect(page).to have_content(@i1.total_revenue)
