@@ -4,6 +4,9 @@ describe "Admin Invoices Index Page" do
   before :each do
     @m1 = Merchant.create!(name: "Merchant 1")
 
+    @discount1 = BulkDiscount.create!(percentage_discount: 10, quantity_threshold: 5, merchant_id: @m1.id)
+    @discount2 = BulkDiscount.create!(percentage_discount: 15, quantity_threshold: 12, merchant_id: @m1.id)
+
     @c1 = Customer.create!(first_name: "Yo", last_name: "Yoz", address: "123 Heyyo", city: "Whoville", state: "CO", zip: 12345)
     @c2 = Customer.create!(first_name: "Hey", last_name: "Heyz")
 
@@ -68,5 +71,23 @@ describe "Admin Invoices Index Page" do
       expect(current_path).to eq(admin_invoice_path(@i1))
       expect(@i1.status).to eq("completed")
     end
+  end
+# User Story 8 - Admin Invoice Show Page: Total Revenue and Discounted Revenue
+# As an admin
+# When I visit an admin invoice show page
+# Then I see the total revenue from this invoice (not including discounts)
+# And I see the total discounted revenue from this invoice which includes 
+# bulk discounts in the calculation
+  it "shows the total revenue for my merchant as well as discounted revenue that includes bulk discounts in the calculation" do
+    save_and_open_page
+
+    expect(page).to have_content("Total Revenue: ")
+    expect(page).to have_content(@i1.total_revenue)
+
+    expect(page).to have_content("Revenue After Discount: ")
+    expect(page).to have_content(@i1.discounted_revenue.round(2))
+
+    expect(page).to have_content("Total Discount Amount: ")
+    expect(page).to have_content(@i1.discount_amount.round(2))
   end
 end
