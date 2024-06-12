@@ -21,4 +21,12 @@ class Item < ApplicationRecord
     .limit(1)
     .first&.invoice_date&.to_date
   end
+
+  def bulk_discount
+    BulkDiscount.joins(merchant: :items)
+                .where("bulk_discounts.quantity_threshold <= ?", invoice_items.sum(:quantity))
+                .where(items: { id: id })
+                .order(quantity_threshold: :desc)
+                .first
+  end
 end

@@ -22,11 +22,13 @@
   <br>
   <section id="discounts_per_item">
   <h4>Bulk Discount Applied per Item: </h4>
-  <% @invoice.items.each do |item| %>
-    <section id="item-<%= item.id %>">
-    <%= "Item: #{item.name}" %>
-    <% if @invoice.discount_applied?(@merchant) == true %>
-      <%= link_to "View Bulk Discount", merchant_bulk_discount_path(item.merchant, @invoice.bulk_discount_for_item(item)) %>
+  <% @invoice.invoice_items.each do |invoice_item| %>
+    <section id="item-<%= invoice_item.id %>">
+    <%= "Item: #{invoice_item.item.name}" %>
+    <% if invoice_item.bulk_discount_applied? %>
+      <%= link_to "View Bulk Discount", merchant_bulk_discount_path(invoice_item.item.merchant, invoice_item.item.bulk_discount) %>
+      <% else %>
+      <%= "No bulk discount applied" %>
     <% end %>
     </section>
   <% end %>
@@ -49,7 +51,7 @@
           <tr class="tr">
             <td style="text-align:center"><%= i.item.name %></td>
             <td style="text-align:center"><%= i.quantity %></td>
-            <td style="text-align:center">$<%= i.unit_price %></td>
+            <td style="text-align:center"><%= number_to_currency(i.unit_price) %></td>
             <td style="text-align:center">
               <%= form_with model: @invoice, url: merchant_invoice_path(@merchant, @invoice), method: :patch, local: true do |f| %>
                 <%= f.select :status, Invoice.statuses.keys, selected: "#{@invoice.status}" %>
