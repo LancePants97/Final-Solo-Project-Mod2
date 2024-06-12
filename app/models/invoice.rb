@@ -18,6 +18,10 @@ class Invoice < ApplicationRecord
   def discounted_revenue(merchant)
     total_revenue - discount_amount(merchant)
   end
+
+  def total_discounted_revenue
+    total_revenue - all_merchants_discount_amount
+  end
   
   def discount_applied?(merchant)
     total_revenue > discounted_revenue(merchant)
@@ -48,7 +52,7 @@ class Invoice < ApplicationRecord
             .first
   end
 
-  def all_merchants_discount_amount # US 8, this was original method
+  def all_merchants_discount_amount # US 8
     discounted_price = 0
     invoice_items.each do |invoice_item|
       item = invoice_item.item

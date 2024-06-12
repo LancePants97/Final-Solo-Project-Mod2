@@ -107,6 +107,7 @@ RSpec.describe "invoices show" do
       expect(page).to_not have_content("in progress")
     end
   end
+  
 # User Story 6 - Merchant Invoice Show Page: Total Revenue and Discounted Revenue
 # As a merchant
 # When I visit my merchant invoice show page
@@ -124,6 +125,20 @@ RSpec.describe "invoices show" do
     expect(page).to have_content("Total Discount Amount: ")
     expect(page).to have_content(@invoice_1.discount_amount(@merchant1).round(2))
   end
+
+  it "shows the total revenue for my merchant as well as discounted revenue that includes bulk discounts in the calculation" do
+    visit merchant_invoice_path(@merchant1, @invoice_2)
+    
+    expect(page).to have_content("Total Revenue: ")
+    expect(page).to have_content(@invoice_2.total_revenue)
+
+    expect(page).to have_content("Revenue After Discount: ")
+    expect(page).to have_content(@invoice_2.discounted_revenue(@merchant2).round(2))
+
+    expect(page).to have_content("Total Discount Amount: ")
+    expect(page).to have_content(@invoice_2.discount_amount(@merchant2).round(2))
+  end
+  
 # 7 - Merchant Invoice Show Page: Link to applied discounts
 # As a merchant
 # When I visit my merchant invoice show page
@@ -138,6 +153,7 @@ RSpec.describe "invoices show" do
       expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts/#{@discount1.id}")
     end
   end
+
   it "each item displays a link to the bulk discount show page if a bulk discount applied to it" do
     visit merchant_invoice_path(@merchant1, @invoice_1)
     
@@ -146,6 +162,15 @@ RSpec.describe "invoices show" do
       click_link("View Bulk Discount")
       
       expect(current_path).to eq("/merchants/#{@merchant1.id}/bulk_discounts/#{@discount2.id}")
+    end
+  end
+
+  it "each item displays a link to the bulk discount show page if a bulk discount applied to it" do
+    visit merchant_invoice_path(@merchant1, @invoice_2)
+
+    within("#item-#{@item_1.id}") do
+      expect(page).to have_content(@item_1.name)
+      expect(page).to_not have_link("View Bulk Discount")
     end
   end
 end
