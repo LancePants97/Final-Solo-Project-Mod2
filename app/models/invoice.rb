@@ -23,14 +23,13 @@ class Invoice < ApplicationRecord
     total_revenue > discounted_revenue(merchant)
   end
 
-  def all_merchants_discount_amount # US 8, this was original method
+  def discount_amount(merchant_id) # US 6
     discounted_price = 0
-    invoice_items.each do |invoice_item|
-      item = invoice_item.item
-      bulk_discount = item.merchant.bulk_discounts
-                        .where("quantity_threshold <= ?", invoice_item.quantity)
-                        .order(quantity_threshold: :desc)
-                        .first
+    invoice_items.joins(item: :merchant).where(merchants: { id: merchant_id }).each do |invoice_item|
+      bulk_discount = invoice_item.item.merchant.bulk_discounts
+                                                .where("quantity_threshold <= ?", invoice_item.quantity)
+                                                .order(quantity_threshold: :desc)
+                                                .first
 
       if bulk_discount.present?
         discount_amount_per_item = invoice_item.unit_price * (bulk_discount.percentage_discount / 100.0).to_f
@@ -49,13 +48,14 @@ class Invoice < ApplicationRecord
             .first
   end
 
-  def discount_amount(merchant_id) # US 6
+  def all_merchants_discount_amount # US 8, this was original method
     discounted_price = 0
-    invoice_items.joins(item: :merchant).where(merchants: { id: merchant_id }).each do |invoice_item|
-      bulk_discount = invoice_item.item.merchant.bulk_discounts
-                                                .where("quantity_threshold <= ?", invoice_item.quantity)
-                                                .order(quantity_threshold: :desc)
-                                                .first
+    invoice_items.each do |invoice_item|
+      item = invoice_item.item
+      bulk_discount = item.merchant.bulk_discounts
+                        .where("quantity_threshold <= ?", invoice_item.quantity)
+                        .order(quantity_threshold: :desc)
+                        .first
 
       if bulk_discount.present?
         discount_amount_per_item = invoice_item.unit_price * (bulk_discount.percentage_discount / 100.0).to_f
