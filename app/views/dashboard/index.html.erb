@@ -1,5 +1,4 @@
 <%= render partial: "shared/nav" %>
-
 <div class="row">
   <div class="col-sm-6 column-header">
     <p class='mr-auto'>Favorite Customers</p>
@@ -8,7 +7,6 @@
     <p class='ml-auto'>Items Ready to Ship</p>
   </div>
 </div>
-
 <div class="mr-auto col-sm-6">
   <ul>
     <% @merchant.favorite_customers.each do |customer| %>
@@ -31,5 +29,3 @@
     </section>
   </ul>
 </div>
-
-  <p><%= link_to "My Bulk Discounts", merchant_bulk_discounts_path(@merchant, @bulk_discounts) %></p>

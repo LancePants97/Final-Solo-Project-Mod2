@@ -76,21 +76,6 @@ RSpec.describe Invoice, type: :model do
       expect(@invoice_2.discounted_revenue(@merchant2)).to eq(invoice_2_total_rev) 
     end
 
-    it "bulk_discount_for_item(item)" do
-      expect(@invoice_1.bulk_discount_for_item(@item_1)).to eq(@discount1)
-      expect(@invoice_1.bulk_discount_for_item(@item_8)).to eq(@discount2)
-      expect(@invoice_1.bulk_discount_for_item(@item_2)).to eq(nil)
-      expect(@invoice_1.bulk_discount_for_item(@item_3)).to eq(@discount3)
-      expect(@invoice_2.bulk_discount_for_item(@item_2)).to eq(nil)
-    end
-
-    it "discount_applied?(merchant)" do
-      expect(@invoice_1.discount_applied?(@merchant1)).to be(true)
-      expect(@invoice_1.discount_applied?(@merchant2)).to be(true)
-      expect(@invoice_2.discount_applied?(@merchant1)).to be(false)
-      expect(@invoice_2.discount_applied?(@merchant2)).to be(false)
-    end
-
     it "all_merchants_discount_amount" do
       item1_discount = ((@ii_1.quantity * @ii_1.unit_price) * @discount1.percentage_discount) # merchant1 discount
       item8_discount = ((@ii_11.quantity * @ii_11.unit_price) * @discount2.percentage_discount) # merchant1 discount

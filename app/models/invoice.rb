@@ -23,10 +23,6 @@ class Invoice < ApplicationRecord
     total_revenue - all_merchants_discount_amount
   end
   
-  def discount_applied?(merchant)
-    total_revenue > discounted_revenue(merchant)
-  end
-
   def discount_amount(merchant_id) # US 6
     discounted_price = 0
     invoice_items.joins(item: :merchant).where(merchants: { id: merchant_id }).each do |invoice_item|
@@ -42,14 +38,6 @@ class Invoice < ApplicationRecord
       end
     end
     discounted_price
-  end
-
-  def bulk_discount_for_item(item)
-    merchant = item.merchant
-    merchant.bulk_discounts
-            .where("quantity_threshold <= ?", item.invoice_items.find_by(invoice_id: id).quantity)
-            .order(quantity_threshold: :desc)
-            .first
   end
 
   def all_merchants_discount_amount # US 8
